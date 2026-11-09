@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+    use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -18,10 +20,33 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+
+
+public function teachingClasses(): HasMany
+{
+    return $this->hasMany(ClassRoom::class, 'teacher_id');
+}
+
+public function classes(): BelongsToMany
+{
+    return $this->belongsToMany(ClassRoom::class, 'class_user', 'user_id', 'class_id');
+}
+
+public function tasks(): HasMany
+{
+    return $this->hasMany(Task::class, 'teacher_id');
+}
+
+public function taskCompletions(): HasMany
+{
+    return $this->hasMany(TaskCompletion::class, 'student_id');
+}
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
